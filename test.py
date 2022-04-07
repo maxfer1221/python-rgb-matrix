@@ -27,8 +27,8 @@ while True:
 
     try:
         track = spotify.current_user_playing_track()
-    except:
-        print("failed to get current track")
+    except Exception as e:
+        print("failed to get current track: ", e)
         continue
 
     if track is None:
@@ -57,18 +57,18 @@ while True:
     with open(f'album_cover', 'wb') as handler:
         handler.write(img_data)
     
-    pid = -1
+    pids = []
 
     try:
         ps = subprocess.Popen(('ps', '-A'), stdout=subprocess.PIPE)
         grep = subprocess.Popen(('grep', 'led-image-viewe'), stdout=subprocess.PIPE, stdin=ps.stdout)
-        pid = subprocess.check_output(('awk', '{ print $1 }'), stdin=grep.stdout)
-        if pid == b'':
-            pid = -1
-        else:
-            pid = pid[:-1]
-            pid = pid.decode('utf-8')
-            pid = int(pid)
+        pids = subprocess.check_output(('awk', '{ print $1 }'), stdin=grep.stdout)
+        pids = pids.split(b'\n')
+        pids = map(lambda el: el.decode('utf-8'), pids)
+
+        pids = filter(lambda el: el != '', pids)
+        pids = map(lambda el: int(el), pids)
+    
     except subprocess.CalledProcessError as err:
         print("piping failed, " + err)
 
@@ -85,7 +85,7 @@ while True:
 
     active_url = image_url
 
-    if pid > 0 and pid != b'':
+    for pid in pids:
         os.system(f'sudo kill -9 {pid}')
     else:
         continue
