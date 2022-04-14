@@ -14,8 +14,8 @@ scope = 'user-read-currently-playing'
 
 username = os.environ["SPOTIPY_USERNAME"]
 
-spotify = spotipy.Spotify(requests_timeout=3, auth_manager=SpotifyOAuth(
-    open_browser=False, scope=['user-read-currently-playing'],
+spotify = spotipy.client.Spotify(requests_timeout=3, auth_manager=SpotifyOAuth(
+    open_browser=False, scope=['user-read-currently-playing', 'user-read-recently-played'],
 ))
 
 track = None
@@ -23,9 +23,16 @@ saved_url  = None
 active_url = None
 
 while True:
-    time.sleep(.1)
+    time.sleep(1)
 
+    
     try:
+        # print("getting current song")
+        # tracks = spotify.current_user_recently_played(limit=50)
+        # print(tracks)
+        # for track in tracks['items']:
+            # print(track['track']['name'])
+        # track = tracks['items'][0]['track']
         track = spotify.current_user_playing_track()
     except Exception as e:
         print("failed to get current track: ", e)
@@ -35,6 +42,7 @@ while True:
         continue
     
     images = track['item']['album']['images']
+    # images = track['album']['images']
     urls = map(lambda el: el['url'], images)
 
     if active_url in urls:
@@ -89,3 +97,8 @@ while True:
         os.system(f'sudo kill -9 {pid}')
     else:
         continue
+
+def map_tracks(track):
+    if track is None:
+        return None
+    return track['track']['images']

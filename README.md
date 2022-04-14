@@ -14,4 +14,28 @@ I've included an `init.sh` script which sets up environment variabels and execut
 Alternatively, `export KEY_NAME=KEY_VAL` each key inside of `init.sh` and `sudo -E python3 ./test.py`.
 Other LED matrix parameters can be changed from within the python script.
 ###### Optional:
+Create a systemd (or equivalent) service that executes the script on startup/some event.
+
+ex:
+```
+[Unit]
+Description=Script service to run on wifi connection
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi
+ExecStart=/home/pi/.onWiFi.sh
+# onWiFi.sh:
+# #!/bin/bash
+# cd /path/to/init.sh 
+# sudo sh init.sh
+
+[Install]
+WantedBy=multi-user.target
+```
+
+###### Old method
 Add the lines inside `.bashrc` into your `~/.bashrc` to automatically start the led display on startup.
