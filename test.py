@@ -27,12 +27,6 @@ while True:
 
     
     try:
-        # print("getting current song")
-        # tracks = spotify.current_user_recently_played(limit=50)
-        # print(tracks)
-        # for track in tracks['items']:
-            # print(track['track']['name'])
-        # track = tracks['items'][0]['track']
         track = spotify.current_user_playing_track()
     except Exception as e:
         print("failed to get current track: ", e)
