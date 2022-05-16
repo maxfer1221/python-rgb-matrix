@@ -35,8 +35,13 @@ while True:
     if track is None:
         continue
     
-    images = track['item']['album']['images']
-    # images = track['album']['images']
+    images = None
+    try:
+        images = track['item']['album']['images']
+    except Exception as e:
+        print(track)
+        continue
+
     urls = map(lambda el: el['url'], images)
 
     if active_url in urls:

@@ -28,13 +28,20 @@ Type=simple
 User=pi
 WorkingDirectory=/home/pi
 ExecStart=/home/pi/.onWiFi.sh
-# onWiFi.sh:
-# #!/bin/bash
-# cd /path/to/init.sh 
-# sudo sh init.sh
 
 [Install]
 WantedBy=multi-user.target
+```
+.onWiFi.sh:
+```sh
+#!/bin/bash
+cd /path/to/init.sh
+sudo sh init.sh
+```
+Then enable the service:
+```
+sudo systemctl enable myservice.service
+# or: sudo systemctl start myservice.service
 ```
 
 ###### Old method
